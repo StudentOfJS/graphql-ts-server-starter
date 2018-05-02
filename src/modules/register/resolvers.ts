@@ -3,10 +3,11 @@ import * as bcrypt from 'bcryptjs'
 import * as yup from 'yup'
 import { User } from "../../entity/User";
 import { formatYupErrors } from "../../utils/formatYupError";
+import { duplicateEmail, emailNotLongEnough, inavlidEmail, passwordNotLongEnough, passwordTooLong, emailTooLong } from "./errorMessages";
 
 const schema = yup.object().shape({
-  email: yup.string().min(3, "email too short").max(255, "too many characters in email").email(),
-  password: yup.string().min(3, "password too short").max(255, "password too long"),
+  email: yup.string().min(3, emailNotLongEnough).max(255, emailTooLong).email(inavlidEmail),
+  password: yup.string().min(3, passwordNotLongEnough).max(255, passwordTooLong),
 })
 export const resolvers: ResolverMap = {
   Query: {
@@ -29,7 +30,7 @@ export const resolvers: ResolverMap = {
         return [
           {
             path: "email",
-            message: "already taken"
+            message: duplicateEmail
           }
         ]
       }

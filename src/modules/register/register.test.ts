@@ -1,6 +1,7 @@
 import { request } from "graphql-request"
 import { User } from "../../entity/User"
 import { startServer } from "../../startServer"
+import { duplicateEmail, emailNotLongEnough, inavlidEmail, passwordNotLongEnough } from "./errorMessages";
 
 let getHost = () => ''
 
@@ -10,19 +11,20 @@ beforeAll(async () => {
   getHost = () => `http://127.0.0.1:${port}`
 })
 
-const email = "ro"
-const password = "pa"
+const email = "rod@test.com"
+const password = "password"
 
-const mutation = `
+const mutation = (e: string = email, p: string = password) => `
   mutation {
-    register(email: "${email}", password: "${password}"){
+    register(email: "${e}", password: "${p}"){
       path
       message
     }
   }
 `
 test("Register User", async () => {
-  const response = await request(getHost(), mutation)
+  // check it is possible to register user
+  const response = await request(getHost(), mutation())
   expect(response).toEqual({ register: null })
   const users = await User.find({ where: { email } })
   expect(users).toHaveLength(1)
@@ -30,15 +32,65 @@ test("Register User", async () => {
   expect(user.email).toEqual(email)
   expect(user.password).not.toEqual(password)
 
-  const response2: any = await request(getHost(), mutation)
+  // test for duplicate emails
+  const response2: any = await request(getHost(), mutation())
   expect(response2.register).toHaveLength(1)
   expect(response2.register[0].path).toEqual("email")
   expect(response2).toEqual({
     register: [
       {
         path: "email",
-        message: "already taken"
+        message: duplicateEmail
       }
     ]
   })
+
+  // catch bad email
+  const response3: any = await request(getHost(), mutation("b", password))
+  expect(response3.register).toHaveLength(2)
+  expect(response3).toEqual({
+    register: [
+      {
+        path: "email",
+        message: emailNotLongEnough
+      },
+      {
+        path: "email",
+        message: inavlidEmail
+      },
+    ]
+  })
+
+  // catch bad password
+  const response4: any = await request(getHost(), mutation(email, "p"))
+  expect(response4.register).toHaveLength(1)
+  expect(response4).toEqual({
+    register: [
+      {
+        path: "password",
+        message: passwordNotLongEnough
+      }
+    ]
+  })
+
+  // catch bad password and email
+  const response5: any = await request(getHost(), mutation("e", "p"))
+  expect(response5.register).toHaveLength(3)
+  expect(response5).toEqual({
+    register: [
+      {
+        path: "email",
+        message: emailNotLongEnough
+      },
+      {
+        path: "email",
+        message: inavlidEmail
+      },
+      {
+        path: "password",
+        message: passwordNotLongEnough
+      },
+    ]
+  })
+
 })
