@@ -32,7 +32,9 @@ test("Register User", async () => {
   expect(user.email).toEqual(email)
   expect(user.password).not.toEqual(password)
 
-  // test for duplicate emails
+})
+
+test("Check for duplicate emails", async () => {
   const response2: any = await request(getHost(), mutation())
   expect(response2.register).toHaveLength(1)
   expect(response2.register[0].path).toEqual("email")
@@ -44,8 +46,9 @@ test("Register User", async () => {
       }
     ]
   })
+})
 
-  // catch bad email
+test("Catch bad email", async () => {
   const response3: any = await request(getHost(), mutation("b", password))
   expect(response3.register).toHaveLength(2)
   expect(response3).toEqual({
@@ -60,8 +63,9 @@ test("Register User", async () => {
       },
     ]
   })
+})
 
-  // catch bad password
+test("Catch bad password", async () => {
   const response4: any = await request(getHost(), mutation(email, "p"))
   expect(response4.register).toHaveLength(1)
   expect(response4).toEqual({
@@ -72,8 +76,9 @@ test("Register User", async () => {
       }
     ]
   })
+})
 
-  // catch bad password and email
+test("Catch bad email and password", async () => {
   const response5: any = await request(getHost(), mutation("e", "p"))
   expect(response5.register).toHaveLength(3)
   expect(response5).toEqual({
@@ -92,5 +97,4 @@ test("Register User", async () => {
       },
     ]
   })
-
 })
