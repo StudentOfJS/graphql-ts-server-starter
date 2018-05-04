@@ -11,7 +11,7 @@ beforeAll(async () => {
   getHost = () => `http://127.0.0.1:${port}`
 })
 
-const email = "rod@test.com"
+const email = "test2@test.com"
 const password = "password"
 
 const mutation = (e: string = email, p: string = password) => `
@@ -23,30 +23,23 @@ const mutation = (e: string = email, p: string = password) => `
   }
 `
 describe("Register user", async () => {
-  test("User can be registered", async () => {
-    const response = await request(getHost(), mutation())
-    expect(response).toEqual({ register: null })
-    const users = await User.find({ where: { email } })
-    expect(users).toHaveLength(1)
-    const user = users[0]
-    expect(user.email).toEqual(email)
-    expect(user.password).not.toEqual(password)
-
-  })
-
   test("Check for duplicate emails", async () => {
-    const response2: any = await request(getHost(), mutation())
-    expect(response2.register).toHaveLength(1)
-    expect(response2.register[0].path).toEqual("email")
-    expect(response2).toEqual({
-      register: [
-        {
-          path: "email",
-          message: duplicateEmail
-        }
-      ]
-    })
-  })
+    const response = await request(getHost(), mutation(email, password));
+    console.log(response)
+    expect(response).toEqual({ register: null });
+    const users = await User.find({ where: { email } });
+    expect(users).toHaveLength(1);
+    const user = users[0];
+    expect(user.email).toEqual(email);
+    expect(user.password).not.toEqual(password);
+
+    const response2: any = await request(getHost(), mutation(email, password));
+    expect(response2.register).toHaveLength(1);
+    expect(response2.register[0]).toEqual({
+      path: "email",
+      message: duplicateEmail
+    });
+  });
 
   test("Catch bad email", async () => {
     const response3: any = await request(getHost(), mutation("b", password))
