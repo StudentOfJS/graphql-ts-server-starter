@@ -54,6 +54,7 @@ npm manifest:
       "test": "NODE_ENV=test jest --forceExit"
     },
     "jest": {
+      "globalSetup": "./src/testSetup/callSetup.js",
       "transform": {
         "^.+\\.tsx?$": "ts-jest"
       },
