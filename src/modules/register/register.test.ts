@@ -1,7 +1,7 @@
 import { request } from "graphql-request"
 import { User } from "../../entity/User"
-import { duplicateEmail, emailNotLongEnough, inavlidEmail, passwordNotLongEnough } from "./errorMessages";
-import { createTypeormConn } from "../../utils/createTypeormConn";
+import { duplicateEmail, emailNotLongEnough, invalidEmail, passwordNotLongEnough } from "./errorMessages"
+import { createTypeormConn } from "../../utils/createTypeormConn"
 
 
 
@@ -23,22 +23,21 @@ beforeAll(async () => {
 
 describe("Register user", async () => {
   test("Check for duplicate emails", async () => {
-    const response = await request(process.env.TEST_HOST as string, mutation(email, password));
-    console.log(response)
-    expect(response).toEqual({ register: null });
-    const users = await User.find({ where: { email } });
-    expect(users).toHaveLength(1);
-    const user = users[0];
-    expect(user.email).toEqual(email);
-    expect(user.password).not.toEqual(password);
+    const response = await request(process.env.TEST_HOST as string, mutation(email, password))
+    expect(response).toEqual({ register: null })
+    const users = await User.find({ where: { email } })
+    expect(users).toHaveLength(1)
+    const user = users[0]
+    expect(user.email).toEqual(email)
+    expect(user.password).not.toEqual(password)
 
-    const response2: any = await request(process.env.TEST_HOST as string, mutation(email, password));
-    expect(response2.register).toHaveLength(1);
+    const response2: any = await request(process.env.TEST_HOST as string, mutation(email, password))
+    expect(response2.register).toHaveLength(1)
     expect(response2.register[0]).toEqual({
       path: "email",
       message: duplicateEmail
-    });
-  });
+    })
+  })
 
   test("Catch bad email", async () => {
     const response3: any = await request(process.env.TEST_HOST as string, mutation("b", password))
@@ -51,7 +50,7 @@ describe("Register user", async () => {
         },
         {
           path: "email",
-          message: inavlidEmail
+          message: invalidEmail
         },
       ]
     })
@@ -81,7 +80,7 @@ describe("Register user", async () => {
         },
         {
           path: "email",
-          message: inavlidEmail
+          message: invalidEmail
         },
         {
           path: "password",
