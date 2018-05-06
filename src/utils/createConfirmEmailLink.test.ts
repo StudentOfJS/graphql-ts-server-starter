@@ -1,14 +1,17 @@
 import * as Redis from 'ioredis'
 import fetch from 'node-fetch'
+import { Connection } from 'typeorm';
 import { createConfirmEmailLink } from "./createConfirmEmailLink"
 import { createTypeormConn } from "./createTypeormConn"
 import { User } from "../entity/User"
 
+
 let userId: string
 let redis: Redis.Redis
 let url: string
+let conn: Connection
 beforeAll(async () => {
-  await createTypeormConn()
+  conn = await createTypeormConn()
   const user = await User.create({
     email: "test@test.com",
     password: "password"
@@ -20,6 +23,10 @@ beforeAll(async () => {
     userId,
     redis,
   )
+})
+
+afterAll(async () => {
+  conn.close();
 })
 
 
