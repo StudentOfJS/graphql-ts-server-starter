@@ -10,6 +10,7 @@ let userId: string
 let redis: Redis.Redis
 let url: string
 let conn: Connection
+
 beforeAll(async () => {
   conn = await createTypeormConn()
   const user = await User.create({
@@ -26,7 +27,7 @@ beforeAll(async () => {
 })
 
 afterAll(async () => {
-  conn.close();
+  await conn.close()
 })
 
 
