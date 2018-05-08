@@ -1,6 +1,6 @@
 import * as bcrypt from "bcryptjs"
 import * as yup from "yup"
-import { v4 } from 'uuid'
+// import { v4 } from 'uuid'
 import { ResolverMap } from "../../types/graphql-utils"
 import { User } from "../../entity/User"
 import { formatYupError } from "../../utils/formatYupError"
@@ -10,8 +10,9 @@ import {
   invalidEmail,
   passwordNotLongEnough
 } from "./errorMessages"
-import { createConfirmEmailLink } from "../../utils/createConfirmEmailLink"
-import { sendEmail } from "../../utils/sendEmail";
+// uncomment to implement email confirmation
+// import { createConfirmEmailLink } from "../../utils/createConfirmEmailLink"
+// import { sendEmail } from "../../utils/sendEmail";
 
 const schema = yup.object().shape({
   email: yup
@@ -33,7 +34,7 @@ export const resolvers: ResolverMap = {
     register: async (
       _,
       args: GQL.IRegisterOnMutationArguments,
-      { redis, url }
+      // { redis, url }
     ) => {
       try {
         await schema.validate(args, { abortEarly: false })
@@ -59,13 +60,12 @@ export const resolvers: ResolverMap = {
 
       const hashedPassword = await bcrypt.hash(password, 10)
       const user = User.create({
-        id: v4(),
         email,
         password: hashedPassword
       })
 
       await user.save()
-      process.env.NODE_ENV !== "test" ? await sendEmail(email, await createConfirmEmailLink(url, user.id, redis)) : null
+      // process.env.NODE_ENV !== "test" ? await sendEmail(email, await createConfirmEmailLink(url, user.id, redis)) : null
 
       return null
     }
