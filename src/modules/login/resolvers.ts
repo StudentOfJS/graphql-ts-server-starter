@@ -14,7 +14,9 @@ export const resolvers: ResolverMap = {
   Mutation: {
     login: async (
       _,
-      { email, password }: GQL.ILoginOnMutationArguments) => {
+      { email, password }: GQL.ILoginOnMutationArguments,
+      { session }
+    ) => {
       const user = await User.findOne({ where: { email } })
       if (!user) return errorResponse;
       if (!user.confirmed) {
@@ -25,6 +27,9 @@ export const resolvers: ResolverMap = {
       }
       const valid = await bcrypt.compare(password, user.password)
       if (!valid) return errorResponse;
+
+      // login successful
+      session.userId = user.id
 
       return null;
     }
