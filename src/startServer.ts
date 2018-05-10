@@ -7,7 +7,7 @@ import { createTypeormConn } from "./utils/createTypeormConn"
 import { confirmEmail } from './routes/confirmEmail';
 import { genSchema } from './utils/genSchema';
 
-const SESSION_SECRET = "dhsfiuhueiwrhuifhiuwhruiqhuirqewhiuwqrhfiqu"
+const SECRET = process.env.TEST_HOST ? process.env.TEST_HOST : "dhsfiuhueiwrhuifhiuwhruiqhuirqewhiuwqrhfiqu"
 const RedisStore = connectRedis(session)
 
 export const startServer = async () => {
@@ -26,7 +26,7 @@ export const startServer = async () => {
         client: redis as any,
       }),
       name: "qid",
-      secret: SESSION_SECRET,
+      secret: SECRET as string,
       resave: false,
       saveUninitialized: false,
       cookie: {
@@ -40,7 +40,7 @@ export const startServer = async () => {
 
   const cors = {
     credentials: true,
-    origin: "http://localhost:3000"
+    origin: process.env.NODE_ENV === "test" ? "*" : (process.env.FRONTEND_HOST as string)
   }
 
   server.express.get("/confirm/:id", confirmEmail)

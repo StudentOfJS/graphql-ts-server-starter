@@ -1,10 +1,20 @@
 import { request } from "graphql-request"
-import { invalidLogin, confirmEmailError } from "./errorMessages";
-import { User } from "../../entity/User";
-import { createTypeormConn } from "../../utils/createTypeormConn";
+import { invalidLogin, confirmEmailError } from "./errorMessages"
+import { User } from "../../entity/User"
+import { createTypeormConn } from "../../utils/createTypeormConn"
+import { Connection } from "typeorm"
 
 const email = "test2@test.com"
 const password = "password"
+let conn: Connection
+
+beforeAll(async () => {
+  conn = await createTypeormConn()
+})
+
+afterAll(async () => {
+  await conn.close()
+})
 
 const registerMutation = (e: string, p: string) => `
   mutation {
@@ -32,10 +42,6 @@ const loginExpectError = async (e: string, p: string, errorMessage: string) => {
     }]
   })
 }
-
-beforeAll(async () => {
-  await createTypeormConn()
-})
 
 describe("login test", () => {
   test("email not found returns error", async () => {
