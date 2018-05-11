@@ -6,7 +6,7 @@ import { User } from '../../entity/User'
 
 let userId: string
 let conn: Connection
-const email = "test@test.com"
+const email = "metest@test.com"
 const password = "password"
 
 const loginMutation = (e: string, p: string) => `
