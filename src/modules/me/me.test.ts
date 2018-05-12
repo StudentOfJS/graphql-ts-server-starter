@@ -39,9 +39,15 @@ beforeAll(async () => {
 afterAll(async () => conn.close())
 
 describe("me", () => {
-  // test("can't get user if not logged in", async () => {
-
-  // })
+  test("return null if no cookie", async () => {
+    const response = await axios.post(
+      process.env.TEST_HOST as string,
+      {
+        query: meQuery
+      }
+    )
+    expect(response.data.data.me).toBeNull()
+  })
   test("get current user", async () => {
     await axios.post(
       process.env.TEST_HOST as string,
