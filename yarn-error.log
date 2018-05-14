@@ -1,5 +1,5 @@
 Arguments: 
-  /home/rod/.nvm/versions/node/v8.4.0/bin/node /home/rod/.nvm/versions/node/v8.4.0/bin/yarn test
+  /home/rod/.nvm/versions/node/v8.4.0/bin/node /home/rod/.nvm/versions/node/v8.4.0/bin/yarn add -D @types/ request-promise
 
 PATH: 
   /home/rod/.nvm/versions/node/v8.4.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/usr/local/go/bin:/usr/local/go/bin:/usr/local/go/bin:/usr/local/go/bin:/usr/local/go/bin:/home/rod/Android/Sdk/tools:/home/rod/Android/Sdk/platform-tools:/usr/local/go/bin:/home/rod/Android/Sdk/tools:/home/rod/Android/Sdk/platform-tools
@@ -56,6 +56,7 @@ npm manifest:
       "node-fetch": "^2.1.2",
       "pg": "^7.3.0",
       "reflect-metadata": "^0.1.10",
+      "request-promise": "^4.2.2",
       "sparkpost": "^2.1.2",
       "typeorm": "0.2.1",
       "uuid": "^3.2.1",
@@ -63,8 +64,8 @@ npm manifest:
     },
     "scripts": {
       "start": "env NODE_ENV=development nodemon -r dotenv/config --exec ts-node src/index.ts",
-      "gen-schema-types": "ts-node src/scripts/createTypes.ts",
-      "test": "NODE_ENV=test jest --watch --env .env"
+      "gen-schema-types": "ts-node src/scripts/createaTypes.ts",
+      "test": "NODE_ENV=test jest --watch --runInBand"
     },
     "jest": {
       "globalSetup": "./src/testSetup/callSetup.js",
@@ -838,7 +839,7 @@ Lockfile:
     version "1.11.0"
     resolved "https://registry.yarnpkg.com/binary-extensions/-/binary-extensions-1.11.0.tgz#46aa1751fb6a2f93ee5e689bb1087d4b14c6c205"
   
-  bluebird@^3.3.4:
+  bluebird@^3.3.4, bluebird@^3.5.0:
     version "3.5.1"
     resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-3.5.1.tgz#d9551f9de98f1fcda1e683d17ee91a0602ee2eb9"
   
@@ -4081,6 +4082,15 @@ Lockfile:
       stealthy-require "^1.1.0"
       tough-cookie ">=2.3.3"
   
+  request-promise@^4.2.2:
+    version "4.2.2"
+    resolved "https://registry.yarnpkg.com/request-promise/-/request-promise-4.2.2.tgz#d1ea46d654a6ee4f8ee6a4fea1018c22911904b4"
+    dependencies:
+      bluebird "^3.5.0"
+      request-promise-core "1.1.1"
+      stealthy-require "^1.1.0"
+      tough-cookie ">=2.3.3"
+  
   request@^2.79.0, request@^2.83.0:
     version "2.85.0"
     resolved "https://registry.yarnpkg.com/request/-/request-2.85.0.tgz#5a03615a47c61420b3eb99b7dba204f83603e1fa"
@@ -5223,17 +5233,11 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/zen-observable/-/zen-observable-0.8.8.tgz#1ea93995bf098754a58215a1e0a7309e5749ec42"
 
 Trace: 
-  Error: Command failed.
-  Exit code: 1
-  Command: sh
-  Arguments: -c NODE_ENV=test jest --watch --env .env
-  Directory: /home/rod/typescript/graphql-ts-server-starter
-  Output:
-  
-      at ProcessTermError.MessageError (/home/rod/.nvm/versions/node/v8.4.0/lib/node_modules/yarn/lib/cli.js:186:110)
-      at new ProcessTermError (/home/rod/.nvm/versions/node/v8.4.0/lib/node_modules/yarn/lib/cli.js:226:113)
-      at ChildProcess.<anonymous> (/home/rod/.nvm/versions/node/v8.4.0/lib/node_modules/yarn/lib/cli.js:30281:17)
-      at emitTwo (events.js:125:13)
-      at ChildProcess.emit (events.js:213:7)
-      at maybeClose (internal/child_process.js:927:16)
-      at Process.ChildProcess._handle.onexit (internal/child_process.js:211:5)
+  Error: Couldn't find package "@types/" on the "npm" registry.
+      at new MessageError (/home/rod/.nvm/versions/node/v8.4.0/lib/node_modules/yarn/lib/cli.js:186:110)
+      at NpmResolver.<anonymous> (/home/rod/.nvm/versions/node/v8.4.0/lib/node_modules/yarn/lib/cli.js:51625:15)
+      at Generator.next (<anonymous>)
+      at step (/home/rod/.nvm/versions/node/v8.4.0/lib/node_modules/yarn/lib/cli.js:98:30)
+      at /home/rod/.nvm/versions/node/v8.4.0/lib/node_modules/yarn/lib/cli.js:109:13
+      at <anonymous>
+      at process._tickCallback (internal/process/next_tick.js:188:7)
