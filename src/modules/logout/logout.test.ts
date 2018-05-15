@@ -23,7 +23,7 @@ afterAll(async () => {
 })
 
 describe("logout", () => {
-  test("test logging out a user", async () => {
+  test("logging out a user - single session", async () => {
     const client = new TestClient(process.env.TEST_HOST as string)
 
     await client.login(email, password)
@@ -42,5 +42,18 @@ describe("logout", () => {
     const response2 = await client.me()
 
     expect(response2.data.me).toBeNull()
+  })
+
+  test("logging out a user - multiple sessions", async () => {
+    const session1 = new TestClient(process.env.TEST_HOST as string)
+    const session2 = new TestClient(process.env.TEST_HOST as string)
+
+    session1.login(email, password)
+    session2.login(email, password)
+
+    expect(await session1.me()).toEqual(await session2.me())
+
+    await session1.logout()
+    expect(await session1.me()).toEqual(await session2.me())
   })
 })

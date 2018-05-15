@@ -16,7 +16,8 @@ export const startServer = async () => {
     context: ({ request }) => ({
       redis,
       url: request.protocol + "://" + request.get("host"),
-      session: request.session
+      session: request.session,
+      req: request
     })
   })
 
@@ -24,6 +25,7 @@ export const startServer = async () => {
     session({
       store: new RedisStore({
         client: redis as any,
+        prefix: "sess:",
       }),
       name: "qid",
       secret: process.env.TEST_HOST as string,
