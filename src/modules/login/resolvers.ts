@@ -1,7 +1,7 @@
 import * as bcrypt from "bcryptjs"
 import { ResolverMap } from "../../types/graphql-utils"
 import { User } from "../../entity/User"
-import { invalidLogin, confirmEmailError } from "./errorMessages"
+import { invalidLogin, confirmEmailError, forgotPasswordLockedError } from "./errorMessages"
 import { userSessionIdPrefix } from "../../constants";
 
 const errorResponse = [{
@@ -20,12 +20,20 @@ export const resolvers: ResolverMap = {
     ) => {
       const user = await User.findOne({ where: { email } })
       if (!user) return errorResponse;
+
       if (!user.confirmed) {
         return [{
           path: "email",
           message: confirmEmailError,
         }]
       }
+      if (user.forgotPasswordLocked) {
+        return [{
+          path: "email",
+          message: forgotPasswordLockedError,
+        }]
+      }
+
       const valid = await bcrypt.compare(password, user.password)
       if (!valid) return errorResponse;
 
