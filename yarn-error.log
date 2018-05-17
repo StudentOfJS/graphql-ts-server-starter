@@ -1,8 +1,8 @@
 Arguments: 
-  /home/rod/.nvm/versions/node/v8.4.0/bin/node /home/rod/.nvm/versions/node/v8.4.0/bin/yarn add -D @types/ request-promise
+  /home/rod/.nvm/versions/node/v8.4.0/bin/node /home/rod/.nvm/versions/node/v8.4.0/bin/yarn gen-schema-types
 
 PATH: 
-  /home/rod/.nvm/versions/node/v8.4.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/usr/local/go/bin:/usr/local/go/bin:/usr/local/go/bin:/usr/local/go/bin:/usr/local/go/bin:/home/rod/Android/Sdk/tools:/home/rod/Android/Sdk/platform-tools:/usr/local/go/bin:/home/rod/Android/Sdk/tools:/home/rod/Android/Sdk/platform-tools
+  /home/rod/.nvm/versions/node/v8.4.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/usr/local/go/bin:/usr/local/go/bin:/usr/local/go/bin:/home/rod/Android/Sdk/tools:/home/rod/Android/Sdk/platform-tools:/home/rod/Android/Sdk/tools:/home/rod/Android/Sdk/platform-tools
 
 Yarn version: 
   1.5.1
@@ -28,6 +28,7 @@ npm manifest:
       "@types/jest": "^22.2.3",
       "@types/node": "^9.6.6",
       "@types/node-fetch": "^1.6.9",
+      "@types/request-promise": "^4.1.41",
       "@types/sparkpost": "^2.1.3",
       "@types/uuid": "^3.4.3",
       "@types/yup": "^0.24.3",
@@ -64,7 +65,7 @@ npm manifest:
     },
     "scripts": {
       "start": "env NODE_ENV=development nodemon -r dotenv/config --exec ts-node src/index.ts",
-      "gen-schema-types": "ts-node src/scripts/createaTypes.ts",
+      "gen-schema-types": "ts-node src/scripts/createTypes.ts",
       "test": "NODE_ENV=test jest --watch --runInBand"
     },
     "jest": {
@@ -283,6 +284,13 @@ Lockfile:
     dependencies:
       "@types/events" "*"
       "@types/node" "*"
+  
+  "@types/request-promise@^4.1.41":
+    version "4.1.41"
+    resolved "https://registry.yarnpkg.com/@types/request-promise/-/request-promise-4.1.41.tgz#1e254d51362d7edcb714b60cde303bcbe0ab1ee0"
+    dependencies:
+      "@types/bluebird" "*"
+      "@types/request" "*"
   
   "@types/request@*":
     version "2.47.0"
@@ -5233,11 +5241,17 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/zen-observable/-/zen-observable-0.8.8.tgz#1ea93995bf098754a58215a1e0a7309e5749ec42"
 
 Trace: 
-  Error: Couldn't find package "@types/" on the "npm" registry.
-      at new MessageError (/home/rod/.nvm/versions/node/v8.4.0/lib/node_modules/yarn/lib/cli.js:186:110)
-      at NpmResolver.<anonymous> (/home/rod/.nvm/versions/node/v8.4.0/lib/node_modules/yarn/lib/cli.js:51625:15)
-      at Generator.next (<anonymous>)
-      at step (/home/rod/.nvm/versions/node/v8.4.0/lib/node_modules/yarn/lib/cli.js:98:30)
-      at /home/rod/.nvm/versions/node/v8.4.0/lib/node_modules/yarn/lib/cli.js:109:13
-      at <anonymous>
-      at process._tickCallback (internal/process/next_tick.js:188:7)
+  Error: Command failed.
+  Exit code: 1
+  Command: sh
+  Arguments: -c ts-node src/scripts/createTypes.ts
+  Directory: /home/rod/typescript/graphql-ts-server-starter
+  Output:
+  
+      at ProcessTermError.MessageError (/home/rod/.nvm/versions/node/v8.4.0/lib/node_modules/yarn/lib/cli.js:186:110)
+      at new ProcessTermError (/home/rod/.nvm/versions/node/v8.4.0/lib/node_modules/yarn/lib/cli.js:226:113)
+      at ChildProcess.<anonymous> (/home/rod/.nvm/versions/node/v8.4.0/lib/node_modules/yarn/lib/cli.js:30281:17)
+      at emitTwo (events.js:125:13)
+      at ChildProcess.emit (events.js:213:7)
+      at maybeClose (internal/child_process.js:927:16)
+      at Process.ChildProcess._handle.onexit (internal/child_process.js:211:5)
