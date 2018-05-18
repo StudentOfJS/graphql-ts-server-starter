@@ -3,26 +3,15 @@ import * as yup from "yup"
 import { ResolverMap } from "../../types/graphql-utils"
 import { User } from "../../entity/User"
 import { formatYupError } from "../../utils/formatYupError"
-import {
-  duplicateEmail,
-  emailNotLongEnough,
-  invalidEmail,
-  passwordNotLongEnough
-} from "./errorMessages"
+import { duplicateEmail } from "./errorMessages"
+import { registerPasswordValidation, registerEmailValidation } from "../../yupSchemas";
 // uncomment to implement email confirmation
 // import { createConfirmEmailLink } from "../../utils/createConfirmEmailLink"
 // import { sendEmail } from "../../utils/sendEmail";
 
 const schema = yup.object().shape({
-  email: yup
-    .string()
-    .min(3, emailNotLongEnough)
-    .max(255)
-    .email(invalidEmail),
-  password: yup
-    .string()
-    .min(3, passwordNotLongEnough)
-    .max(255)
+  email: registerEmailValidation,
+  password: registerPasswordValidation
 })
 
 export const resolvers: ResolverMap = {
