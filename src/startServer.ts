@@ -1,8 +1,8 @@
 import { GraphQLServer } from 'graphql-yoga'
 import * as session from 'express-session'
 import * as connectRedis from 'connect-redis'
-
-
+import * as RateLimit from 'express-rate-limit'
+import * as RedisRateLimitStore from 'rate-limit-redis'
 import { redis } from './redis'
 import { createTypeormConn } from "./utils/createTypeormConn"
 import { confirmEmail } from './routes/confirmEmail';
@@ -22,6 +22,16 @@ export const startServer = async () => {
     })
   })
 
+  server.express.use(
+    new RateLimit({
+      store: new RedisRateLimitStore({
+        client: redis
+      }),
+      windowMs: 15 * 60 * 1000,
+      max: 100,
+      delayMs: 0
+    })
+  )
   server.express.use(
     session({
       store: new RedisStore({
