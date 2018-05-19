@@ -1,6 +1,7 @@
 import * as Redis from 'ioredis'
 import fetch from 'node-fetch'
-import { Connection } from 'typeorm';
+import { Connection } from 'typeorm'
+
 import { createConfirmEmailLink } from "./createConfirmEmailLink"
 import { createTypeormConn } from "./createTypeormConn"
 import { User } from "../entity/User"
@@ -50,4 +51,3 @@ describe('test createConfirmEmailLink', () => {
     expect(value).toBeNull()
   })
 })
-
