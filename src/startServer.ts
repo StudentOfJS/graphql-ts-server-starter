@@ -3,11 +3,15 @@ import * as session from 'express-session'
 import * as connectRedis from 'connect-redis'
 import * as RateLimit from 'express-rate-limit'
 import * as RedisRateLimitStore from 'rate-limit-redis'
+import * as passport from 'passport'
+import { Strategy } from 'passport-twitter'
+
 import { redis } from './redis'
 import { createTypeormConn } from "./utils/createTypeormConn"
 import { confirmEmail } from './routes/confirmEmail';
 import { genSchema } from './utils/genSchema';
 import { redisSessionPrefix } from './constants';
+import { User } from './entity/User';
 
 const RedisStore = connectRedis(session)
 
@@ -59,6 +63,33 @@ export const startServer = async () => {
   server.express.get("/confirm/:id", confirmEmail)
 
   await createTypeormConn()
+
+  passport.use(
+    new Strategy(
+      {
+        consumerKey: process.env.TWITTER_CONSUMER_KEY as string,
+        consumerSecret: process.env.TWITTER_CONSUMER_SECRET as string,
+        callbackURL: "http://localhost:4000/auth/twitter/callback",
+        includeEmail: true
+      },
+      {
+        function(token, tokenSecret, profile, cb) {
+          User.findOrCreate({ twitterId: profile.id }, function (err, user) {
+            return cb(err, user)
+          })
+        }
+      }
+    ))
+
+  app.get('/auth/twitter',
+    passport.authenticate('twitter'));
+
+  app.get('/auth/twitter/callback',
+    passport.authenticate('twitter', { failureRedirect: '/login' }),
+    function (req, res) {
+      // Successful authentication, redirect home.
+      res.redirect('/');
+    });
   const app = await server.start({
     cors,
     port: process.env.NODE_ENV === "test" ? 0 : 4000
