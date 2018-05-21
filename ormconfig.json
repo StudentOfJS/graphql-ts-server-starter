@@ -9,6 +9,7 @@
     "database": "graphql-ts-server-starter",
     "synchronize": true,
     "logging": true,
+    "dropSchema": true,
     "entities": [
       "src/entity/**/*.ts"
     ],

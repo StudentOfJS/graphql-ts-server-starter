@@ -8,10 +8,10 @@ import { Strategy } from 'passport-twitter'
 
 import { redis } from './redis'
 import { createTypeormConn } from "./utils/createTypeormConn"
-import { confirmEmail } from './routes/confirmEmail';
-import { genSchema } from './utils/genSchema';
-import { redisSessionPrefix } from './constants';
-import { User } from './entity/User';
+import { confirmEmail } from './routes/confirmEmail'
+import { genSchema } from './utils/genSchema'
+import { redisSessionPrefix } from './constants'
+import { User } from './entity/User'
 
 const RedisStore = connectRedis(session)
 
@@ -62,7 +62,8 @@ export const startServer = async () => {
 
   server.express.get("/confirm/:id", confirmEmail)
 
-  await createTypeormConn()
+  const connection = await createTypeormConn()
+
 
   passport.use(
     new Strategy(
@@ -72,24 +73,51 @@ export const startServer = async () => {
         callbackURL: "http://localhost:4000/auth/twitter/callback",
         includeEmail: true
       },
-      {
-        function(token, tokenSecret, profile, cb) {
-          User.findOrCreate({ twitterId: profile.id }, function (err, user) {
-            return cb(err, user)
-          })
+      async (_, __, profile, cb) => {
+
+        const { id, emails } = profile
+
+        const query = connection
+          .getRepository(User)
+          .createQueryBuilder("user")
+          .where('user.twitterId = :id', { id })
+
+        let email: string | null = null
+
+        if (emails) {
+          email = emails[0].value
+          query.orWhere('user.email = :email', { email })
         }
+
+        let user = await query.getOne()
+
+        // this user needs to be registered
+        if (!user) {
+          user = await User.create({
+            twitterId: id,
+            email,
+          }).save()
+        }
+        else if (!user.twitterId) {
+          // merge account
+          user.twitterId = id
+          await user.save()
+        }
+
+        return cb(null, { id: user.id })
       }
     ))
 
-  app.get('/auth/twitter',
-    passport.authenticate('twitter'));
+  server.express.use(passport.initialize())
+  server.express.get('/auth/twitter', passport.authenticate('twitter'))
 
-  app.get('/auth/twitter/callback',
-    passport.authenticate('twitter', { failureRedirect: '/login' }),
-    function (req, res) {
-      // Successful authentication, redirect home.
-      res.redirect('/');
-    });
+  server.express.get('/auth/twitter/callback',
+    passport.authenticate('twitter', { session: false }),
+    (req, res) => {
+      (req.session as any).userId = (req.user as any).id
+      // @todo Redirect to frontend
+      res.redirect('/')
+    })
   const app = await server.start({
     cors,
     port: process.env.NODE_ENV === "test" ? 0 : 4000
