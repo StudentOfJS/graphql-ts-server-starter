@@ -1,5 +1,4 @@
 import { Connection } from "typeorm"
-import { createTypeormConn } from "../../utils/createTypeormConn"
 import { User } from "../../entity/User"
 import { TestClient } from "../../utils/testClient"
 import { createForgotPasswordLink } from "../../utils/createForgotPasswordLink"
@@ -8,16 +7,18 @@ import { forgotPasswordLockAccount } from "../../utils/forgotPasswordLockAccount
 import { passwordNotLongEnough } from "../register/errorMessages"
 import { expiredKeyError } from "./errorMessages"
 import { forgotPasswordLockedError } from "../login/errorMessages"
+import * as faker from 'faker'
+import { createTestConn } from "../../testUtils/createTestConn"
 
 let conn: Connection
 export const redis = new Redis()
-const email = "bob5@bob.com"
-const password = "jlkajoioiqwe"
-const newPassword = "qowuieoiqwueoq"
+const email = faker.internet.email()
+const password = faker.internet.password()
+const newPassword = faker.internet.password()
 
 let userId: string
 beforeAll(async () => {
-  conn = await createTypeormConn()
+  conn = await createTestConn()
   const user = await User.create({
     email,
     password,
