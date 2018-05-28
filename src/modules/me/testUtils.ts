@@ -1,13 +1,13 @@
 import axios from 'axios'
 import { Connection } from 'typeorm'
-import { createTypeormConn } from '../../utils/createTypeormConn'
 import { User } from '../../entity/User'
-
+import { createTestConn } from '../../testUtils/createTestConn';
+import * as faker from 'faker'
 
 let userId: string
 let conn: Connection
-const email = "metest@test.com"
-const password = "password"
+const email = faker.internet.email();
+const password = faker.internet.password();
 
 const loginMutation = (e: string, p: string) => `
   mutation {
@@ -28,7 +28,7 @@ const meQuery = `
 `
 
 beforeAll(async () => {
-  conn = await createTypeormConn()
+  conn = await createTestConn()
   const user = await User.create({
     email,
     password,

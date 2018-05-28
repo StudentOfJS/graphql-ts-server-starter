@@ -5,16 +5,17 @@ import {
   invalidEmail,
   passwordNotLongEnough
 } from "./errorMessages"
-import { createTypeormConn } from "../../utils/createTypeormConn"
+
 import { Connection } from "typeorm"
 import { TestClient } from "../../utils/testClient"
+import { createTestConn } from "../../testUtils/createTestConn";
 
 const email = "tom@bob.com"
 const password = "jalksdf"
 
 let conn: Connection
 beforeAll(async () => {
-  conn = await createTypeormConn()
+  conn = await createTestConn()
 })
 afterAll(async () => {
   conn.close()

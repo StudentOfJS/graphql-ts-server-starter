@@ -1,10 +1,12 @@
 import * as Redis from 'ioredis'
 import fetch from 'node-fetch'
+import * as faker from 'faker'
 import { Connection } from 'typeorm'
 
 import { createConfirmEmailLink } from "./createConfirmEmailLink"
-import { createTypeormConn } from "./createTypeormConn"
-import { User } from "../entity/User"
+import { createTestConn } from '../../testUtils/createTestConn'
+import { User } from '../../entity/User'
+
 
 
 let userId: string
@@ -13,10 +15,10 @@ let url: string
 let conn: Connection
 
 beforeAll(async () => {
-  conn = await createTypeormConn()
+  conn = await createTestConn()
   const user = await User.create({
-    email: "test@test.com",
-    password: "password"
+    email: faker.internet.email(),
+    password: faker.internet.password(),
   }).save()
   userId = user.id
   redis = new Redis()
