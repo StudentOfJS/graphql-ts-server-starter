@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { Connection } from 'typeorm'
-import { User } from '../../entity/User'
-import { createTestConn } from '../../testUtils/createTestConn';
+import { User } from '../../../entity/User'
+import { createTestConn } from '../../../testUtils/createTestConn';
 import * as faker from 'faker'
 
 let userId: string

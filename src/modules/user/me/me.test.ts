@@ -1,8 +1,8 @@
-import { User } from "../../entity/User"
+import { User } from "../../../entity/User"
 import { Connection } from "typeorm"
-import { TestClient } from "../../utils/testClient"
+import { TestClient } from "../../../utils/testClient"
 import * as faker from 'faker'
-import { createTestConn } from "../../testUtils/createTestConn"
+import { createTestConn } from "../../../testUtils/createTestConn"
 
 let userId: string
 let conn: Connection

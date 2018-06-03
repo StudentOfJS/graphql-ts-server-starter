@@ -1,8 +1,8 @@
 import { invalidLogin, confirmEmailError } from "./errorMessages"
-import { User } from "../../entity/User"
+import { User } from "../../../entity/User"
 import { Connection } from "typeorm"
-import { TestClient } from "../../utils/testClient"
-import { createTestConn } from "../../testUtils/createTestConn";
+import { TestClient } from "../../../utils/testClient"
+import { createTestConn } from "../../../testUtils/createTestConn";
 import * as faker from 'faker'
 
 const email = faker.internet.email()

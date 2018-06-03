@@ -1,7 +1,7 @@
-import { createTypeormConn } from "../../utils/createTypeormConn"
-import { User } from "../../entity/User"
+import { createTypeormConn } from "../../../utils/createTypeormConn"
+import { User } from "../../../entity/User"
 import { Connection } from "typeorm"
-import { TestClient } from "../../utils/testClient"
+import { TestClient } from "../../../utils/testClient"
 
 let conn: Connection
 const email = "bob5@bob.com"
